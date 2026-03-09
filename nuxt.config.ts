@@ -2,7 +2,12 @@
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
-  
+
+  devServer: {
+    port: 3004,
+    host: '0.0.0.0'
+  },
+
   app: {
     head: {
       title: '我不是在玩游戏 - 游戏人生',
@@ -18,6 +23,8 @@ export default defineNuxtConfig({
       ]
     }
   },
+
+  modules: ['@nuxtjs/tailwindcss'],
 
   css: ['~/assets/css/main.css'],
 
