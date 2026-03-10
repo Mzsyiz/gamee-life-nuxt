@@ -18,6 +18,17 @@
           <span class="neon-text text-cyan-400">游戏日记</span>
         </h1>
         <p class="text-gray-400 text-lg">记录每一个游戏时刻</p>
+
+        <!-- 管理入口 -->
+        <NuxtLink
+          to="/admin/add-diary"
+          class="inline-flex items-center gap-2 mt-6 px-6 py-3 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/50 text-cyan-300 rounded-lg transition-all"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          </svg>
+          写日记
+        </NuxtLink>
       </div>
     </header>
 
@@ -59,10 +70,10 @@
                   <h3 class="text-xl md:text-2xl font-bold text-white mb-4">{{ item.title }}</h3>
 
                   <!-- 游戏图片 -->
-                  <div class="relative rounded-xl overflow-hidden mb-4 group">
+                  <div v-if="item.game_id" class="relative rounded-xl overflow-hidden mb-4 group">
                     <img
-                      :src="item.game_image"
-                      :alt="item.game"
+                      :src="item.game_cover"
+                      :alt="item.game_title"
                       class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
                       @error="handleImageError"
                     />
@@ -71,12 +82,23 @@
                       <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
                       </svg>
-                      <span class="text-white font-medium">{{ item.game }}</span>
+                      <span class="text-white font-medium">{{ item.game_title }}</span>
                     </div>
                   </div>
 
                   <!-- 描述 -->
                   <p class="text-gray-300 leading-relaxed">{{ item.description }}</p>
+
+                  <!-- 编辑按钮 -->
+                  <NuxtLink
+                    :to="`/admin/edit-diary?id=${item.id}`"
+                    class="inline-flex items-center gap-1 mt-4 text-sm text-gray-400 hover:text-cyan-400 transition-colors"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                    </svg>
+                    编辑
+                  </NuxtLink>
                 </div>
               </div>
             </div>
@@ -109,7 +131,7 @@ const handleImageError = (e) => {
 // 加载日记数据
 onMounted(async () => {
   try {
-    const response = await fetch('/data/diary.json')
+    const response = await fetch('/api/diaries')
     diaryItems.value = await response.json()
   } catch (error) {
     console.error('加载日记数据失败:', error)
